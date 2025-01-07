@@ -1,23 +1,15 @@
 version: "3"
 
 tasks:
-  go:
-    cmds:
-      - air
-
   templ:
     cmds:
-      - templ generate --watch
+      - templ generate --watch --proxy="http://localhost:3000" --cmd="go run ."
 
   tailwind:
     cmds:
       - npx tailwindcss -i ./pages/global.css -o ./public/styles.css --watch
 
-  htmx_update:
-    cmds:
-      - curl -o public/htmx.js https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js
-
-  dev:
-    deps: [go, templ, tailwind]
+  run:
+    deps: [templ, tailwind]
     cmds:
       - echo "Killing Application..."

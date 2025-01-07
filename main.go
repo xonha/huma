@@ -40,6 +40,6 @@ func main() {
 
 	router.Get("/", helloHTML)
 
-	fmt.Println("Listening on :3000")
+	fmt.Println("Server starting/reloading...")
 	http.ListenAndServe(":3000", router)
 }
