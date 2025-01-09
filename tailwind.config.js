@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-export const content = ["./**/*.html", "./**/*.templ", "./**/*.go"];
-export const theme = {
-  extend: {},
+module.exports = {
+  content: ["./**/*.html", "./**/*.templ", "./**/*.go"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
 };
-export const plugins = [];

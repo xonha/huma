@@ -1,0 +1,31 @@
+package pages
+
+templ Page() {
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+			<link rel="stylesheet" href="public/styles.css"/>
+			<script src="public/htmx.js"></script>
+			<title>Counter</title>
+		</head>
+		<body class="flex h-dvh w-dvw justify-center items-center">
+			<div class="text-center space-y-4">
+				<button
+					class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+					hx-get="/hello"
+					hx-target="#response"
+					hx-swap="innerHTML"
+				>
+					Click Me
+				</button>
+				<div id="response" class="text-lg text-gray-700">Click the button to see a response</div>
+			</div>
+		</body>
+	</html>
+}
+
+templ Response() {
+	<div class="text-green-500">Hello from the server!</div>
+}
