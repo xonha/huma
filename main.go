@@ -2,19 +2,23 @@ package main
 
 import (
 	"context"
+	"embed"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"os"
 
 	"github.com/a-h/templ"
-	"github.com/aws/aws-lambda-go/lambda"
-	chiadapter "github.com/awslabs/aws-lambda-go-api-proxy/chi"
+	"github.com/akrylysov/algnhsa"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/xonha/huma-chi/pages"
 )
+
+//go:embed all:public
+var embeddedFiles embed.FS
 
 type HelloInput struct {
 	Name string `path:"name" maxLength:"30" example:"world" doc:"Name to greet"`
@@ -31,12 +35,13 @@ func hello(ctx context.Context, input *HelloInput) (*HelloOutput, error) {
 	return resp, nil
 }
 
-var chiLambda *chiadapter.ChiLambda
-
 func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
-	router.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+
+	assets, _ := fs.Sub(embeddedFiles, "public")
+	router.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.FS(assets))))
+
 	router.Get("/", templ.Handler(pages.Page()).ServeHTTP)
 	router.Get("/hello", templ.Handler(pages.Response()).ServeHTTP)
 
@@ -44,10 +49,8 @@ func main() {
 	huma.Get(api, "/hello/{name}", hello)
 
 	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
-		chiLambda = chiadapter.New(router)
-		lambda.Start(chiLambda.ProxyWithContext)
+		algnhsa.ListenAndServe(router, nil)
 	} else {
-		// Local development
 		fmt.Println("Server starting locally on port 3000...")
 		http.ListenAndServe(":3000", router)
 	}

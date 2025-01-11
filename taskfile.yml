@@ -7,7 +7,7 @@ tasks:
 
   tailwind:
     cmds:
-      - npx tailwindcss -i ./pages/main.css -o ./public/styles.css --watch
+      - npx tailwindcss -i ./pages/main.css -o ./public/styles.css --watch --minify
 
   run:
     deps: [templ, tailwind]

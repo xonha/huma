@@ -1,0 +1,4 @@
+#!/bin/sh
+export "LAMBDA_TASK_ROOT"="$(pwd)"
+chmod +x main
+exec ./main
