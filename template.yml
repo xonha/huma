@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Huma
+
+  Sample SAM Template for Huma with CloudFront
+
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 128
+
+Resources:
+  HumaFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: go1.x
+    Properties:
+      CodeUri: ./
+      Handler: bootstrap
+      Runtime: provided.al2023
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: BUFFERED
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          PARAM1: VALUE
+
+  HumaCloudFront:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultCacheBehavior:
+          TargetOriginId: HumaLambdaOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+        Origins:
+          - Id: HumaLambdaOrigin
+            DomainName: "pezqwfidp3ny2l73yfg6kg4oim0ecxov.lambda-url.us-east-2.on.aws"
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+        DefaultRootObject: ""
+
+Outputs:
+  HumaFunction:
+    Description: "First Lambda Function ARN"
+    Value: !GetAtt HumaFunction.Arn
+  HumaFunctionIamRole:
+    Description: "Implicit IAM Role created for Huma function"
+    Value: !GetAtt HumaFunctionRole.Arn
+  HumaFunctionUrlEndpoint:
+    Description: "My Lambda Function URL Endpoint"
+    Value:
+      Fn::GetAtt: HumaFunctionUrl.FunctionUrl
+  HumaCloudFrontEndpoint:
+    Description: "CloudFront Distribution URL for the Lambda Function URL"
+    Value: !Sub "https://${HumaCloudFront.DomainName}"

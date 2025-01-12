@@ -13,3 +13,14 @@ tasks:
     deps: [templ, tailwind]
     cmds:
       - echo "Killing Application..."
+
+  tidy:
+    cmds:
+      - templ generate
+      - npx tailwindcss -i ./pages/main.css -o ./public/styles.css --minify
+
+  deploy:
+    deps: [tidy]
+    cmds:
+      - sam build
+      - sam deploy --no-confirm-changeset
