@@ -1,6 +1,9 @@
-/tmp
+tmp/
 *_templ.*
-
-public/styles.css
-
 .aws-sam
+node_modules/
+
+public/css/*
+public/js/*
+
+

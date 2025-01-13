@@ -14,7 +14,7 @@ import (
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/xonha/huma-chi/pages"
+	"github.com/xonha/huma-chi/app"
 )
 
 //go:embed all:public
@@ -42,8 +42,8 @@ func main() {
 	assets, _ := fs.Sub(embeddedFiles, "public")
 	router.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.FS(assets))))
 
-	router.Get("/", templ.Handler(pages.Page()).ServeHTTP)
-	router.Get("/hello", templ.Handler(pages.Response()).ServeHTTP)
+	router.Get("/", templ.Handler(app.Page()).ServeHTTP)
+	router.Get("/hello", templ.Handler(app.Response()).ServeHTTP)
 
 	api := humachi.New(router, huma.DefaultConfig("My API", "1.0.0"))
 	huma.Get(api, "/hello/{name}", hello)

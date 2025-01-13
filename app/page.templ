@@ -1,4 +1,4 @@
-package pages
+package app
 
 templ Page() {
 	<html lang="en">
@@ -6,15 +6,19 @@ templ Page() {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-			<link rel="stylesheet" href="public/styles.css"/>
 			<link rel="icon" href="public/icon.ico"/>
-			<script src="public/htmx.js"></script>
+			<link rel="stylesheet" href="public/css/styles.css"/>
+			<script defer init src="public/js/main.js"></script>
 			<title>Counter</title>
 		</head>
 		<body class="flex h-dvh w-dvw justify-center items-center">
 			@Main()
 		</body>
 	</html>
+}
+
+templ Response() {
+	<div class="text-green-500">Hello from the server!</div>
 }
 
 templ Main() {
@@ -28,9 +32,14 @@ templ Main() {
 			Click Me
 		</button>
 		<div id="response" class="text-lg text-gray-700">Click the button to see a response</div>
+		<input x-mask="99/99/9999" x-data placeholder="DD/MM/YYYY"/>
+		@Counter()
 	</main>
 }
 
-templ Response() {
-	<div class="text-green-500">Hello from the server!</div>
+templ Counter() {
+	<div v-scope="{count:0}">
+		<button class="bg-blue-500 rounded shadow" @click="count++">Increment Vue</button>
+		<span v-text="count"></span>
+	</div>
 }
