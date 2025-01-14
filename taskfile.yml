@@ -3,11 +3,9 @@ version: "3"
 tasks:
   setup:
     cmds:
-      - bun install
       - templ generate
       - go mod tidy
-      - bun tailwindcss -i ./app/main.css -o ./public/css/styles.css --minify
-      - bun esbuild "./app/**/*.ts" --outdir=public/js --bundle --minify
+      - npx tailwindcss -i ./app/main.css -o ./public/styles.css --minify
 
   deploy:
     deps: [setup]
@@ -16,7 +14,7 @@ tasks:
       - sam deploy --no-confirm-changeset
 
   run:
-    deps: [templ, tailwind, esbuild]
+    deps: [tailwind, templ]
     cmds:
       - echo "Killing Application..."
 
@@ -26,8 +24,4 @@ tasks:
 
   tailwind:
     cmds:
-      - bun tailwindcss -i ./app/main.css -o ./public/css/styles.css --watch --minify
-
-  esbuild:
-    cmds:
-      - bun esbuild "./app/**/*.ts" --outdir=public/js --bundle --watch --minify
+      - npx tailwindcss -i ./app/main.css -o ./public/styles.css --watch --minify

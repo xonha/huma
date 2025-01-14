@@ -3,7 +3,7 @@ tmp/
 .aws-sam
 node_modules/
 
-public/css/*
-public/js/*
+public/styles.css
+
 
 

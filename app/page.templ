@@ -7,8 +7,8 @@ templ Page() {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 			<link rel="icon" href="public/icon.ico"/>
-			<link rel="stylesheet" href="public/css/styles.css"/>
-			<script defer init src="public/js/main.js"></script>
+			<link rel="stylesheet" href="public/styles.css"/>
+			<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
 			<title>Counter</title>
 		</head>
 		<body class="flex h-dvh w-dvw justify-center items-center">
@@ -34,12 +34,48 @@ templ Main() {
 		<div id="response" class="text-lg text-gray-700">Click the button to see a response</div>
 		<input x-mask="99/99/9999" x-data placeholder="DD/MM/YYYY"/>
 		@Counter()
+		@MaskedInput()
 	</main>
 }
 
 templ Counter() {
-	<div v-scope="{count:0}">
-		<button class="bg-blue-500 rounded shadow" @click="count++">Increment Vue</button>
-		<span v-text="count"></span>
+	<div id="counter-container">
+		<button id="increment-btn" class="bg-blue-500 rounded shadow">Increment JS</button>
+		<span id="count-value">0</span>
+	</div>
+	<script>
+  let count = 0;
+  const button = document.getElementById("increment-btn");
+  const countSpan = document.getElementById("count-value");
+
+  button.addEventListener("click", () => {
+    count++;
+    countSpan.textContent = count;
+  });
+</script>
+}
+
+templ MaskedInput() {
+	<div>
+		<label for="cpf">CPF:</label>
+		<input type="text" id="cpf" maxlength="14" placeholder="XXX.XXX.XXX-XX"/>
+		<script>
+    const cpfInput = document.getElementById("cpf");
+
+    cpfInput.addEventListener("input", () => {
+      let value = cpfInput.value;
+      value = value.replace(/\D/g, "");
+
+      if (value.length > 9) {
+        value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, "$1.$2.$3-$4");
+      } else if (value.length > 6) {
+        value = value.replace(/^(\d{3})(\d{3})(\d{1,3})$/, "$1.$2.$3");
+      } else if (value.length > 3) {
+        value = value.replace(/^(\d{3})(\d{1,3})$/, "$1.$2");
+      }
+
+      cpfInput.value = value;
+    });
+  </script>
 	</div>
 }
