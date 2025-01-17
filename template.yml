@@ -48,12 +48,18 @@ Resources:
               Forward: none
         Origins:
           - Id: HumaLambdaOrigin
-            DomainName: "pezqwfidp3ny2l73yfg6kg4oim0ecxov.lambda-url.us-east-2.on.aws"
+            DomainName: "v6joheaex5b5m4epjvoyv2xare0iimba.lambda-url.us-east-2.on.aws"
             CustomOriginConfig:
               HTTPPort: 80
               HTTPSPort: 443
               OriginProtocolPolicy: https-only
         DefaultRootObject: ""
+        Aliases:
+          - "go.xonha.space" # Replace with your domain name
+        ViewerCertificate:
+          AcmCertificateArn: "arn:aws:acm:us-east-1:536044156294:certificate/362c8ac8-9042-40ea-8b63-e5411d8cf8ce" # Replace with your ACM certificate ARN
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
 
 Outputs:
   HumaFunction:
@@ -64,8 +70,7 @@ Outputs:
     Value: !GetAtt HumaFunctionRole.Arn
   HumaFunctionUrlEndpoint:
     Description: "My Lambda Function URL Endpoint"
-    Value:
-      Fn::GetAtt: HumaFunctionUrl.FunctionUrl
+    Value: !GetAtt HumaFunctionUrl.FunctionUrl
   HumaCloudFrontEndpoint:
     Description: "CloudFront Distribution URL for the Lambda Function URL"
     Value: !Sub "https://${HumaCloudFront.DomainName}"
